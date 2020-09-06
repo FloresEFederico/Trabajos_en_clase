@@ -1,0 +1,10 @@
+Funciones:
+utn_getNumero : consigue numero entero
+utn_getNumeroFlotante: consigue numero flotante
+utn_getCaracter: consigue letra
+
+
+Funciones Estaticas:
+getInt: para pedir numero a traves de una cadena de caracteres y lo transforma
+esNumerica: se fija si lo que escribiste en getInt es todo numero
+myGets: reemplaza al fgets
