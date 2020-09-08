@@ -13,71 +13,81 @@
 #include "utn.h"
 #define QTY_ELEMENTOS 5
 
-void imprimirArray(int array[],int lengitud);
-void burbujeoMalo(int array[],int len);
-void bubbleSort(int array[],int len);
-void insertion(int array[],int len);
+
 
 int main(void) {
 	setbuf(stdout,NULL);
+	int numeros[QTY_ELEMENTOS];
+	int i;
+	int indice;
+	int flag = 0;
+	int maximo;
+	int minimo;
+	int acumulador = 0;
+	float promedio;
+	char modificar;
+	int bufferAux;
 
+	for(i=0;i<QTY_ELEMENTOS;i++){
+		numeros[i] = 0;
+	}
+
+	for(i=0;i<QTY_ELEMENTOS;i++){
+
+		printf("\nIndice: %d\n",i);
+		if(!utn_getNumero(&numeros[i],"\nIngrese numero(0-100): ","\nNumero invalido!\n",0,100,3)){
+			if(!flag){
+				maximo = numeros[i];
+				minimo = numeros[i];
+				flag = 1;
+			}
+			if(maximo < numeros[i]){
+				maximo = numeros[i];
+			}
+			if(minimo > numeros[i]){
+				minimo = numeros[i];
+			}
+		}else{
+			printf("\nHubo un error al cargar el numero!\n");
+		}
+	}
+	imprimirArray(numeros,QTY_ELEMENTOS);
+
+	do{
+		if(!utn_getCaracter(&modificar,"\nDesea modificar algun numero?(s/n): ","\nLetra invalida!\n",'n','s',5)){
+			if(modificar == 's'){
+				if(!utn_getNumero(&indice,"\nIngrese el indice que desea modificar(0-4): ","\nindice invalido!\n",0,4,3)){
+					printf("\nINDICE: %d  -  VALOR: %d \n",indice,numeros[indice]);
+					if(!utn_getNumero(&bufferAux,"\nPor cual valor lo desea cambiar: ","\nValor invalido!\n",0,100,3)){
+						numeros[indice] = bufferAux;
+						printf("\nModificacion Realizada! Se ha cambiado el valor del numero.\n");
+						if(maximo < numeros[indice]){
+							maximo = numeros[indice];
+							printf("\nha habido un cambio en el maximo!\n");
+						}
+						if(minimo > numeros[indice]){
+							minimo = numeros[indice];
+							printf("\nha habido un cambio en el minimo!\n");
+						}
+					}else{
+						printf("\nNo se pudo modificar el numero!");
+					}
+				}
+			}
+		}else{
+			printf("\nHubo un error al elegir la letra!\n");
+		}
+	}while(modificar == 's');
+	for(i=0;i<QTY_ELEMENTOS;i++){
+		acumulador+=numeros[i];
+	}
+	promedio = (float)acumulador/QTY_ELEMENTOS;
+	imprimirArray(numeros,QTY_ELEMENTOS);
+	printf("\n\n------------------------------------------------------------\n\n");
+	printf("MAXIMO: %d\n"
+			"MINIMO: %d\n"
+			"PROMEDIO: %.2f",maximo,minimo,promedio);
 	return EXIT_SUCCESS;
 }
 
 
-void imprimirArray(int array[],int lengitud){
-	int i;
-	for(i=0;i<lengitud;i++){
-		printf("POSICION: %d  - VALOR: %d \n",i,array[i]);
-	}
-
-}
-
-//AUN MENOS EFICIENTE
-void burbujeoMalo(int array[],int len){
-	int i;
-	int j;
-	int bufferAuxiliar;
-
-	for(i=0;i<len-1;i++){
-		for(j=i+1;i<len;j++){
-			bufferAuxiliar = array[i];
-			array[i] = array[j];
-			array[j] = bufferAuxiliar;
-		}
-	}
-}
-//MENOS EFICIENTE
-void bubbleSort(int array[],int len){
-	int i;
-	int bufferAuxiliar;
-	int flagNoEstaOrdenado = 1;
-
-	while(flagNoEstaOrdenado){
-		flagNoEstaOrdenado = 0;
-		for(i=1;i<len;i++){
-			if(array[i] < array[i-1]){
-				bufferAuxiliar = array[i];
-				array[i] = array[i-1];
-				array[i-1] = bufferAuxiliar;
-				flagNoEstaOrdenado = 1;
-			}
-		}
-	}
-}
-
-//MAYOR EFICIENCIA FUNCION: insertion
-void insertion(int array[],int len){
-	int i;
-	int j;
-	int temp;
-	for(i=1;i<len;i++){
-		temp = array[i];
-		j = i - 1;
-		while(j >= 0 && temp < array[j]){ 	// temp<array[j] o temp>array[j]
-			array[j+1] = array[j];
-			j--;
-		}
-		array[j+1] = temp; //insercion
-	}
-}

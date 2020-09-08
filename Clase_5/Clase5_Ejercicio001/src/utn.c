@@ -231,4 +231,36 @@ int utn_getCaracter(char* pResultado,char* mensaje,char* mensajeError,int minimo
 	return retorno;
 }
 
+/*
+ * imprimirArray: imprime los datos de un array de enteros
+ * array: array de enteros
+ * len: longitud de array
+ * Retorno: VOID
+ */
+void imprimirArray(int array[],int lengitud){
+	int i;
+	for(i=0;i<lengitud;i++){
+		printf("%d ",array[i]);
+	}
+}
 
+/*
+ * insertion: burbujeo de de un array de enteros
+ * array: array de enteros
+ * len: longitud de array
+ * Retorno: VOID
+ */
+void insertion(int array[],int len){
+	int i;
+	int j;
+	int temp;
+	for(i=1;i<len;i++){
+		temp = array[i];
+		j = i - 1;
+		while(j >= 0 && temp < array[j]){ 	// temp<array[j] o temp>array[j]
+			array[j+1] = array[j];
+			j--;
+		}
+		array[j+1] = temp; //insercion
+	}
+}
