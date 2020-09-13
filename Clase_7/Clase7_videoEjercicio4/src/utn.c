@@ -12,7 +12,7 @@ static int getInt(int* pResultado); //utilizada en utn_getNumero
 static int esNumerica(char* cadena);//utilizada en getInt
 static int myGets(char* cadena, int longitud);//utilizada en getInt, getFloat y getString
 static int getFloat(float* pFloat);// utilizada en utn_getNumeroFloat
-static int esFlotante(char* array); // utilizada en getFloat
+static int esNumeroDecimal(char* buffer); // utilizada en getFloat
 static int getString(char* pResultado,int longitud); //utilizada en utn_getCadena
 static int esSoloLetras(char* pResultado); //utilizada en getString
 
@@ -80,7 +80,7 @@ static int getInt(int* pResultado){
 static int esNumerica(char* cadena){
 	int retorno = 1;
 	int i = 0;
-	if(cadena[0] == '-' || cadena[0] == '+'){
+	if(cadena[0] == '-' ){
 		i = 1;
 	}
 	for(;cadena[i] != '\0';i++){
@@ -112,7 +112,7 @@ static int myGets(char* cadena, int longitud){
 }
 
 /*
- * utn_getNumeroFloat : Solicita un numero flotante al usuario, luego de verificarlo devuelve el resultado
+ * utn_getNumeroFloat : pide al usuario un numero flotante
  * pResultado : Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
  * mensaje : El mensaje que imprime para pedir un valor.
  * mensajeError: El mensaje que imprime si el rango no es valido.
@@ -147,8 +147,8 @@ int utn_getNumeroFloat(float* pResultado,char* mensaje,char* mensajeError,float 
 }
 
 /*
- * getFloat: verifica si la cadena ingresada es flotante
- * pFloat: puntero numero float
+ * getFloat: pide un texto al usuario, lo almacena como cadena, valida y convierte el texto a numero y lo devuelve como float
+ * presultado: puntero numero float
  * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
  *
  */
@@ -159,7 +159,7 @@ static int getFloat(float* pFloat){
 	if(pFloat != NULL){
 		fflush(stdin);
 		resultadoScan = myGets(bufferFloat,sizeof(bufferFloat));
-		if(resultadoScan && esFlotante(bufferFloat)){
+		if(resultadoScan && esNumeroDecimal(bufferFloat)){
 			*pFloat = atof(bufferFloat);
 			retorno = 1;
 		}
@@ -168,30 +168,32 @@ static int getFloat(float* pFloat){
 }
 
 /*
- * esFlotante: Verifica si la cadena ingresada es flotante
- * cadena: cadena de caracteres a ser analizada
+ * esNumeroDecimal: Recibe una cadena de caracteres y devuelve 1 en caso de que el texto este compuesto solo por numeros y/o una sola coma
+ * cadena: cadena de caracteres
  * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
  *
  */
-static int esFlotante(char* array){
+static int esNumeroDecimal(char* buffer){
 	int retorno = 1;
-	int i = 0;
 	int contadorDePuntos = 0;
-
-	if(array != NULL){
-		while(array[i] != '\0'){
-			if((array[i] < '0' || array[i] > '9') && array[i] != '.' &&  array[0] != '+' && array[0] != '-'){
-				retorno = 0;
-				break;
-			}
-			if(array[i] == '.'){
-				contadorDePuntos++;
-				if(contadorDePuntos > 1){
+	int i;
+	if(buffer != NULL && strlen(buffer) > 0){
+		if(buffer[0] == '-' ){
+			i = 1;
+		}
+		for( ;buffer[i] != '\0';i++){
+			if(buffer[i] < '0' || buffer[i] > '9'){
+				if(buffer[i] != '.'){
+					retorno = 0;
+					break;
+				}else{
+					contadorDePuntos++;
+				}
+				if(contadorDePuntos == 2){
 					retorno = 0;
 					break;
 				}
 			}
-			i++;
 		}
 	}
 	return retorno;
@@ -233,6 +235,41 @@ int utn_getCaracter(char* pResultado,char* mensaje,char* mensajeError,int minimo
 	return retorno;
 }
 
+
+
+/*
+ * imprimirArray: imprime los datos de un array de enteros
+ * array: array de enteros
+ * len: longitud de array
+ * Retorno: VOID
+ */
+void imprimirArrayCantidadDeDias(float array[],int lengitud){
+	int i;
+	for(i=0;i<lengitud;i++){
+		printf("INDICE: %2d  -   VALOR: %.2f \n",i,array[i]);
+	}
+}
+
+/*
+ * insertion: burbujeo de de un array de enteros
+ * array: array de enteros
+ * len: longitud de array
+ * Retorno: VOID
+ */
+void insertion(int array[],int len){
+	int i;
+	int j;
+	int temp;
+	for(i=1;i<len;i++){
+		temp = array[i];
+		j = i - 1;
+		while(j >= 0 && temp < array[j]){ 	// temp<array[j] o temp>array[j]
+			array[j+1] = array[j];
+			j--;
+		}
+		array[j+1] = temp; //insercion
+	}
+}
 
 
 /*
@@ -342,104 +379,6 @@ int esTelefono(char* pResultado){
 				numeroDeGuiones++;
 			}
 		}
-	}
-	return retorno;
-}
-
-/*
- * insertion: burbujeo de de un array de enteros
- * array: array de enteros
- * len: longitud de array
- * Retorno: VOID
- */
-void insertion(int array[],int len){
-	int i;
-	int j;
-	int temp;
-	for(i=1;i<len;i++){
-		temp = array[i];
-		j = i - 1;
-		while(j >= 0 && temp < array[j]){ 	// temp<array[j] o temp>array[j]
-			array[j+1] = array[j];
-			j--;
-		}
-		array[j+1] = temp; //insercion
-	}
-}
-
-
-/*
- * \brief 	imprime un array de enteros
- * \param pArray Puntero al array
- * \param longitud Define el tamaño del array
- * \returtn retorna 0 {EXITO} o -1 {ERROR}
- */
-int imprimeArrayEntero(int pArray[],int longitud){
-	int retorno = -1;
-	int i;
-	if(pArray != NULL && longitud > 0){
-		for(i=0;i<longitud;i++){
-			printf("\nIndice: [%d] - Valor: %d",i,pArray[i]);
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
-
-/*
- * \brief 	imprime un array de flotantes
- * \param pArray Puntero al array
- * \param longitud Define el tamaño del array
- * \returtn retorna 0 {EXITO} o -1 {ERROR}
- */
-int imprimeArrayFlotante(float pArray[],int longitud){
-	int retorno = -1;
-	int i;
-	if(pArray != NULL && longitud > 0){
-		for(i=0;i<longitud;i++){
-			printf("\nIndice: [%d] - Valor: %.2f",i,pArray[i]);
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
-
-
-/*
- * \brief 	inicializa un array de enteros
- * \param pArray Puntero al array
- * \param longitud Define el tamaño del array
- * \param valorInicial Es el valor a ser cargado en todas las posiciones del array
- * \returtn retorna 0 {EXITO} o -1 {ERROR}
- */
-int initArrayEntero(int pArray[],int longitud, int valorInicial){
-	int retorno = -1;
-	int i;
-	if(pArray != NULL && longitud > 0){
-		for(i=0;i<longitud;i++){
-			pArray[i] = valorInicial;
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
-
-
-/*
- * \brief 	inicializa un array de flotantes
- * \param pArray Puntero al array
- * \param longitud Define el tamaño del array
- * \param valorInicial Es el valor a ser cargado en todas las posiciones del array
- * \returtn retorna 0 {EXITO} o -1 {ERROR}
- */
-int initArrayFlotante(float pArray[],int longitud, float valorInicial){
-	int retorno = -1;
-	int i;
-	if(pArray != NULL && longitud > 0){
-		for(i=0;i<longitud;i++){
-			pArray[i] = valorInicial;
-		}
-		retorno = 0;
 	}
 	return retorno;
 }

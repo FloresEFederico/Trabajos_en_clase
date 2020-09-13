@@ -15,7 +15,7 @@ int factorial(int numero);
 
 int main(void) {
 	setbuf(stdout,NULL);
-	int numero = 4;
+	int numero = 17;
 	int resultado;
 	resultado = factorial(numero);
 	printf("%d",resultado);
