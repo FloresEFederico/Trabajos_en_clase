@@ -17,67 +17,27 @@
  4)Borrar nombre. Se ingresa el nombre y si se encuentra se elimina de la lista						||
 =====================================================================================================|
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "utn.h"
+#include "logica.h"
 #define CANTIDAD_NUM 5
 
-int borrarImpares(int arrayDeImpares[],int len);
-int ordenarArrayPorInsercion(int array[],int len);
+
 
 int main(void) {
 	setbuf(stdout,NULL);
 
 	int numeros[CANTIDAD_NUM];
-	int i;
 
-	for(i=0;i<CANTIDAD_NUM;i++){
-		if(!utn_getNumero(&numeros[i],"\nIngrese numero: ","\nNumero invalido!",-5,100,3)){
-
-		}else{
-			printf("\nSe acabaron los intentos para ingresar bien le numero.\n");
-		}
+	if(!solicitarNumeros(numeros,CANTIDAD_NUM,-10,100)){
+		borrarImpares(numeros,CANTIDAD_NUM);
+		imprimirArray(numeros,CANTIDAD_NUM);
+		printf("\nOrden de mayor a menor\n---\n");
+		ordenarArrayPorInsercion(numeros,CANTIDAD_NUM);
+		imprimirArray(numeros,CANTIDAD_NUM);
 	}
-	borrarImpares(numeros,CANTIDAD_NUM);
-	imprimirArray(numeros,CANTIDAD_NUM);
-	printf("\nOrden de mayor a menor\n---\n");
-	ordenarArrayPorInsercion(numeros,CANTIDAD_NUM);
-	imprimirArray(numeros,CANTIDAD_NUM);
 	return EXIT_SUCCESS;
 }
 
-int borrarImpares(int arrayDeImpares[],int len){
-	int retorno = -1;
-	int i;
-	if(arrayDeImpares != NULL){
-		for(i=0;i<len;i++){
-			if(arrayDeImpares[i] % 2 != 0){
-				arrayDeImpares[i] = 0;
-			}
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
-
-int ordenarArrayPorInsercion(int array[],int len){
-	int retorno = -1;
-	int i;
-	int j;
-	int auxiliar;
-	if(array != NULL && len > 0){
-		for(i=1;i<len;i++){
-			auxiliar = array[i];
-			j = i - 1;
-			while(j >= 0 && auxiliar < array[j]){
-				array[j+1] = array[j];
-				j--;
-			}
-			array[j+1] = auxiliar;
-		}
-		retorno = 0;
-	}
-	return retorno;
-}
