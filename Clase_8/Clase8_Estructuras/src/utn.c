@@ -9,12 +9,12 @@
 #include <string.h>
 
 static int getInt(int* pResultado); //utilizada en utn_getNumero
-static int esNumerica(char* cadena);//utilizada en getInt
-static int myGets(char* cadena, int longitud);//utilizada en getInt, getFloat y getString
+static int esNumerica(char* cadena,int limite);//utilizada en getInt
+static int myGets(char* cadena,int longitud);//utilizada en getInt, getFloat y getString
 static int getFloat(float* pFloat);// utilizada en utn_getNumeroFloat
-static int esFlotante(char* array); // utilizada en getFloat
+static int esFlotante(char* array,int limite); // utilizada en getFloat
 static int getString(char* pResultado,int longitud); //utilizada en utn_getCadena
-static int esSoloLetras(char* pResultado); //utilizada en getString
+static int esSoloLetras(char* pResultado,int limite); //utilizada en getString
 
 /*
  * utn_getNumero : pide al usuario un numero entero
@@ -59,11 +59,10 @@ int utn_getNumero(int* pResultado,char* mensaje,char* mensajeError,int minimo,in
  */
 static int getInt(int* pResultado){
 	int retorno = 0;
-	int resultadoGets;
 	char buffer[64];
 	if(pResultado != NULL){
-		resultadoGets = myGets(buffer,sizeof(buffer));
-		if(resultadoGets && esNumerica(buffer)){
+
+		if(!myGets(buffer,sizeof(buffer)) && esNumerica(buffer,sizeof(buffer))){
 			*pResultado = atoi(buffer);
 			retorno = 1;
 		}
@@ -71,22 +70,26 @@ static int getInt(int* pResultado){
 	return retorno;
 }
 
-/*
- * esNumerica: Recibe una cadena de caracteres y devuelve 1 en caso de que el texto este compuesto solo por numeros
- * cadena: cadena de caracteres
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
- *
- */
-static int esNumerica(char* cadena){
-	int retorno = 1;
+/**
+* esNumerica: Verifica si la cadena ingresada es numerica
+* cadena: cadena de caracteres a ser analizada
+* limite: limite de la cadena
+* Retorno: 1 (verdadero) si la cadena es numerica , 0 (falso) si no y -1 en caso de ERROR de parametro
+*
+*/
+static int esNumerica(char* cadena,int limite){
+	int retorno = 1; //ERROR
 	int i = 0;
-	if(cadena[0] == '-' || cadena[0] == '+'){
-		i = 1;
-	}
-	for(;cadena[i] != '\0';i++){
-		if(cadena[i] < '0' || cadena[i] > '9' ){
-			retorno = 0;
-			break;
+	if(cadena != NULL && limite > 0){
+		retorno = 1; //VERDADERO
+		if(cadena[0] == '-' || cadena[0] == '+'){
+			i = 1;
+		}
+		for(;cadena[i] != '\0';i++){
+			if(cadena[i] < '0' || cadena[i] > '9' ){
+				retorno = 0; //FALSO
+				break;
+			}
 		}
 	}
 	return retorno;
@@ -96,11 +99,11 @@ static int esNumerica(char* cadena){
 * myGets: Lee de stdin hasta que encuentra un '\n' o hasta que haya copiado en cadena un máximo de ' longitud - 1' caracteres .
 * cadena: Puntero al espacio de memoria donde se copiara la cadena obtenida
 * longitud:  Define el tamaño de cadena
-* Retorno: 1 (EXITO) si se obtiene una cadena y 0 (ERROR) si no
+* Retorno: 0 (EXITO) si se obtiene una cadena y -1 (ERROR) si no
 *
 */
 static int myGets(char* cadena, int longitud){
-	int retorno = -1;
+	int retorno = -1; //ERROR
 	char bufferString[4096];
 
 	if(cadena != NULL && longitud > 0)
@@ -115,7 +118,7 @@ static int myGets(char* cadena, int longitud){
 			if(strlen(bufferString) <= longitud)
 			{
 				strncpy(cadena,bufferString,longitud);
-				retorno = 0;
+				retorno = 0; //EXITO
 			}
 		}
 
@@ -167,11 +170,10 @@ int utn_getNumeroFloat(float* pResultado,char* mensaje,char* mensajeError,float 
 static int getFloat(float* pFloat){
 	int retorno = 0;
 	char bufferFloat[64];
-	int resultadoScan;
 	if(pFloat != NULL){
 		fflush(stdin);
-		resultadoScan = myGets(bufferFloat,sizeof(bufferFloat));
-		if(resultadoScan && esFlotante(bufferFloat)){
+
+		if(!myGets(bufferFloat,sizeof(bufferFloat)) && esFlotante(bufferFloat,sizeof(bufferFloat))){
 			*pFloat = atof(bufferFloat);
 			retorno = 1;
 		}
@@ -182,17 +184,22 @@ static int getFloat(float* pFloat){
 /*
  * esFlotante: Verifica si la cadena ingresada es flotante
  * cadena: cadena de caracteres a ser analizada
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
+ * limite: limite de la cadena
+ * Retorno: 1 (verdadero) si la cadena es flotante , 0 (falso) si no y -1 en caso de ERROR de parametro
  *
  */
-static int esFlotante(char* array){
-	int retorno = 1;
+static int esFlotante(char* array,int limite){
+	int retorno = -1;
 	int i = 0;
 	int contadorDePuntos = 0;
 
-	if(array != NULL){
+	if(array != NULL && limite > 0){
+		retorno = 1;
+		if(array[0] != '+' || array[0] != '-'){
+			i = 1;
+		}
 		while(array[i] != '\0'){
-			if((array[i] < '0' || array[i] > '9') && array[i] != '.' &&  array[0] != '+' && array[0] != '-'){
+			if((array[i] < '0' || array[i] > '9') && array[i] != '.'){
 				retorno = 0;
 				break;
 			}
@@ -261,12 +268,12 @@ int utn_getCaracter(char* pResultado,char* mensaje,char* mensajeError,int minimo
 int utn_getCadena(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos){
 	int retorno = -1;
 	char bufferChar[45];
-
 	if(pResultado != NULL && mensaje != NULL && mensajeError != NULL && reintentos > 0){
 		do{
 			printf("%s",mensaje);
-			if(getString(bufferChar,sizeof(bufferChar))){
-				strncpy(pResultado,bufferChar,longitud);
+			if(getString(bufferChar,sizeof(bufferChar)) &&
+				strlen(bufferChar) < longitud){
+				strncpy(pResultado,bufferChar,longitud-1);
 				retorno = 0;
 				break;
 			}else{
@@ -291,7 +298,7 @@ static int getString(char* pResultado,int longitud){
 	char buffAux[1000];
 	if(pResultado != NULL && longitud > 0){
 		fflush(stdin);
-		if(myGets(buffAux,sizeof(buffAux)) && esSoloLetras(buffAux)){
+		if(!myGets(buffAux,sizeof(buffAux)) && esSoloLetras(buffAux,sizeof(buffAux))){
 			strncpy(pResultado,buffAux,longitud);
 			retorno = 1;
 		}
@@ -305,18 +312,21 @@ static int getString(char* pResultado,int longitud){
  * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
  *
  */
-static int esSoloLetras(char* pResultado){
-	int retorno = 1;
+static int esSoloLetras(char* pResultado,int limite){
+	int respuesta = 1; // TODO OK
 	int i;
-	if(pResultado != NULL){
-		for(i=0;pResultado[i] != '\0';i++){
-			if((pResultado[i] != ' ') && (pResultado[i] < 'a' || pResultado[i] > 'z') && (pResultado[i] < 'A' || pResultado[i] > 'Z')){
-				retorno = 0;
+	if(pResultado != NULL && limite > 0){
+		for(i=0; i <= limite && pResultado[i] != '\0';i++){
+			if((pResultado[i] < 'a' || pResultado[i] > 'z') &&
+			   (pResultado[i] < 'A' || pResultado[i] > 'Z') &&
+			   pResultado[i] != ' ')
+			{
+				respuesta = 0;
 				break;
 			}
 		}
 	}
-	return retorno;
+	return respuesta;
 }
 
 /*
