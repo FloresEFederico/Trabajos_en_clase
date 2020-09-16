@@ -14,7 +14,7 @@ static int myGets(char* cadena, int longitud);//utilizada en getInt, getFloat y 
 static int getFloat(float* pFloat);// utilizada en utn_getNumeroFloat
 static int esFlotante(char* array); // utilizada en getFloat
 static int getString(char* pResultado,int longitud); //utilizada en utn_getCadena
-static int esSoloLetras(char* pResultado,int limite); //utilizada en getString
+static int esSoloLetras(char* pResultado); //utilizada en getString
 
 /*
  * utn_getNumero : pide al usuario un numero entero
@@ -291,7 +291,7 @@ static int getString(char* pResultado,int longitud){
 	char buffAux[1000];
 	if(pResultado != NULL && longitud > 0){
 		fflush(stdin);
-		if(myGets(buffAux,sizeof(buffAux)) && esSoloLetras(buffAux,sizeof(buffAux))){
+		if(myGets(buffAux,sizeof(buffAux)) && esSoloLetras(buffAux)){
 			strncpy(pResultado,buffAux,longitud);
 			retorno = 1;
 		}
@@ -305,21 +305,18 @@ static int getString(char* pResultado,int longitud){
  * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
  *
  */
-static int esSoloLetras(char* pResultado,int limite){
-	int respuesta = 1; // TODO OK
+static int esSoloLetras(char* pResultado){
+	int retorno = 1;
 	int i;
-	if(pResultado != NULL && limite > 0){
-		for(i=0; i <= limite && pResultado[i] != '\0';i++){
-			if((pResultado[i] < 'a' || pResultado[i] > 'z') &&
-			   (pResultado[i] < 'A' || pResultado[i] > 'Z') &&
-			   pResultado[i] != ' ')
-			{
-				respuesta = 0;
+	if(pResultado != NULL){
+		for(i=0;pResultado[i] != '\0';i++){
+			if((pResultado[i] != ' ') && (pResultado[i] < 'a' || pResultado[i] > 'z') && (pResultado[i] < 'A' || pResultado[i] > 'Z')){
+				retorno = 0;
 				break;
 			}
 		}
 	}
-	return respuesta;
+	return retorno;
 }
 
 /*
