@@ -14,6 +14,22 @@
 #include "utn.h"
 #include "alumno.h"
 
+/*
+ * Clase 10:
+ * Ejercicio 5)Realizar una funcion que reciba el array y un indice,
+ * e imprima los datos del item de esa posicion, si es que tiene datos validos.
+ *
+ * Ejercicio 6)Realizar una funcion que me devuelva el indice de un item vacio
+ * (sin cargar). Devuelve la posicion libre o -1;
+ *
+ *Ejercicio 7) Realizar un programa con un menu de dos opciones:
+ *	a) Alta de alumno. - NO PEDIR INCIDE-
+ *	b) Imprimir lista alumnos
+ */
+//CLASE 10
+
+//Ejercicio 5
+int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int indice);
 
 
 int main(void) {
@@ -45,6 +61,22 @@ int main(void) {
 	}while(op != 6);
 	printf("\nHasta Luego!\n");
 	return EXIT_SUCCESS;
+}
+
+//FUNCION DE CLASE 10!
+//Ejercicio 5
+int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int limite,int indice){
+	int retorno = -1;
+	int i;
+	if(arrayAlumno != NULL &&
+			indice >= 0 &&
+			limite > 0 &&
+			indice < QTY_ALUMNOS &&
+			arrayAlumno[indice].isEmpty == FALSE)
+	{
+		printf("\nIndice: %d   -   Nombre: %-11s  -  Legajo: %d",indice,arrayAlumno[indice].nombre,arrayAlumno[indice].legajo);
+	}
+	return retorno;
 }
 
 
