@@ -35,7 +35,6 @@ int utn_getNumero(int* pResultado,char* mensaje,char* mensajeError,int minimo,in
 	if(pResultado != NULL && mensaje != NULL && mensajeError != NULL && minimo <= maximo && reintentos > 0){
 		do{
 			printf("%s", mensaje);
-			fflush(stdin);
 			resultadoScan = getInt(&bufferInt);
 			if(resultadoScan == 1 && bufferInt >= minimo && bufferInt <= maximo){
 				*pResultado = bufferInt;
@@ -144,7 +143,6 @@ int utn_getNumeroFloat(float* pResultado,char* mensaje,char* mensajeError,float 
 	if(pResultado != NULL && mensaje != NULL && mensajeError != NULL && minimo <= maximo && reintentos > 0){
 		do{
 			printf("%s", mensaje);
-			fflush(stdin);
 			resultadoScan = getFloat(&bufferFloat);
 			if(resultadoScan && minimo <= bufferFloat && maximo >= bufferFloat){
 				*pResultado = bufferFloat;
@@ -171,8 +169,6 @@ static int getFloat(float* pFloat){
 	int retorno = 0;
 	char bufferFloat[64];
 	if(pFloat != NULL){
-		fflush(stdin);
-
 		if(!myGets(bufferFloat,sizeof(bufferFloat)) && esFlotante(bufferFloat,sizeof(bufferFloat))){
 			*pFloat = atof(bufferFloat);
 			retorno = 1;
@@ -297,7 +293,6 @@ static int getString(char* pResultado,int longitud){
 	int retorno = 0;
 	char buffAux[1000];
 	if(pResultado != NULL && longitud > 0){
-		fflush(stdin);
 		if(!myGets(buffAux,sizeof(buffAux)) && esSoloLetras(buffAux,sizeof(buffAux))){
 			strncpy(pResultado,buffAux,longitud);
 			retorno = 1;

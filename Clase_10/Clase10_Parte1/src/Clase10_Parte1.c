@@ -15,8 +15,8 @@
 #include <string.h>
 #include "utn.h"
 #include "alumno.h"
+#include "nac.h"
 
-int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int limite,int indice);
 /*
 *Ejercicio 7) Realizar un programa con un menu de dos opciones:
 *	a) Alta de alumno. - NO PEDIR INCIDE-
@@ -62,20 +62,36 @@ int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int limite,int indice);
  *
  *  12) Agregar una opcion en el menu "Borrar Alumno"
  *  	 que pida al usuario el ID del mismo.
+ *  --------------------------------------------------------------------------
+ *	29/09
+ *	VAMOS A PRACTICAR UN AUTOROBO - VAMOS A CREAR UNA NUEVA ENTIDAD
+ *	Y LE PASAMOS TODO LO QUE VIMOS HASTA AHORA, ADAPTANDO LAS FUNCIONES
+ *	A ESA NUEVA ENTIDAD.
  *
  */
 
 
+int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int limite,int indice);
 
 
 int main(void) {
 	setbuf(stdout,NULL);
 	int op;
 	Alumno arrayAlumnos[QTY_ALUMNOS];
+	Nacionalidad arrayNacionalidades[QTY_NACIONALIDAD];
 	alumno_initArray(arrayAlumnos,QTY_ALUMNOS);
-
 	do{
-		utn_getNumero(&op,"\n1-Alta\n2-Modificar\n3-Imprimir Por indice\n4-Salir\nElija opcion(1-5): ","\nOpcion invalida!\n",1,5,3);
+		utn_getNumero(&op,"\n---Menu Alumno--\n\n1-Alta\n"
+				"2-Modificar\n"
+				"3-Baja\n"
+				"4-Imprimir\n"
+				"\n---Menu Nacionalidad--\n\n"
+				"5-Alta nacionalidad\n"
+				"6-Modificar nacionalidad\n"
+				"7-Baja nacionalidad\n"
+				"8-imprimir nacionalidad\n"
+				"9-Salir\n"
+				"Elija opcion(1-9): ","\nOpcion invalida!\n",1,9,3);
 		switch(op){
 		case 1:
 			if(!alumno_alta(arrayAlumnos,QTY_ALUMNOS)){
@@ -99,16 +115,43 @@ int main(void) {
 			}
 			break;
 		case 4:
-			alumno_imprimirTodos(arrayAlumnos,QTY_ALUMNOS);
+			if(alumno_imprimirTodos(arrayAlumnos,QTY_ALUMNOS))
+			{
+				printf("\nNo se pudo imprimir a los alumnos.\n");
+			}
+			break;
+		case 5:
+			if(!nacionalidad_alta(arrayNacionalidades,QTY_NACIONALIDAD)){
+				printf("\nSe realizo el alta con exito!\n");
+			}else{
+				printf("\nNo se pudo realizar la alta!\n");
+			}
+			break;
+		case 6:
+			if(!nacionalidad_modificar(arrayNacionalidades,QTY_NACIONALIDAD)){
+				printf("\nSe ha modificado al nacionalidad exitosamente!\n");
+			}else{
+				printf("\nNo se pudo modificar la nacionalidad\n");
+			}
+			break;
+		case 7:
+			if(!nacionalidad_baja(arrayNacionalidades,QTY_NACIONALIDAD)){
+				printf("\nSe ha dado de baja al nacionalidad exitosamente!\n");
+			}else{
+				printf("\nNo se pudo dar de baja la nacionalidad.\n");
+			}
+			break;
+		case 8:
+			if(nacionalidad_imprimirTodos(arrayNacionalidades,QTY_NACIONALIDAD))
+			{
+				printf("\nNo se pudo imprimir a las nacionalidades.\n");
+			}
 			break;
 		}
-	}while(op != 5);
+	}while(op != 9);
 	printf("\nHasta Luego!\n");
-
-
 	return EXIT_SUCCESS;
 }
-
 
 int alumno_imprimirArrayPorIndice(Alumno* arrayAlumno,int limite,int indice){
 	int retorno = -1;

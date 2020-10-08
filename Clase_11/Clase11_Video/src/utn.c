@@ -11,7 +11,7 @@
 
 static int getInt(int* pResultado); //utilizada en utn_getNumero
 static int esNumerica(char* cadena,int limite);//utilizada en getInt
-static int myGets(char* cadena,int longitud);//utilizada en getInt, getFloat y getString
+static int myGets(char* cadena,int longitud);//utilizada en getInt, getFloat, getString, getNombre,getDni,getDireccion
 static int getFloat(float* pFloat);// utilizada en utn_getNumeroFloat
 static int esFlotante(char* array,int limite); // utilizada en getFloat
 static int getString(char* pResultado,int longitud); //utilizada en utn_getCadena
@@ -22,7 +22,7 @@ static int toNombre(char text[],int len); //utilizada en getNombre
 static int getDni(char* pResultado,int longitud); //utilizada en utn_getDni
 static int esDni(char* pResultado,int limite); //utilizada en getDni
 static int getDireccion(char* pResultado,int longitud); // utilizada en utn_getDireccion
-static int esAlfaNumerica(char* pResultado); //utilizada en getDireccion
+static int esAlfaNumerica(char* pResultado); // utilizada en getDireccion
 /*
  * utn_getNumero : pide al usuario un numero entero
  * pResultado : Direccion de memoria de la variable donde escribe el valor ingresado por el usuario
@@ -433,13 +433,6 @@ static int getName(char* pResultado,int longitud)
 	return retorno;
 }
 
-/*
- * getDni: pide un texto al usuario, lo almacena como cadena, valida y lo devuelve
- * presultado: puntero a  array de caracter
- * longitud: tamaño del array
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
- *
- */
 static int getDni(char* pResultado,int longitud)
 {
 	int retorno = 0;
@@ -455,14 +448,6 @@ static int getDni(char* pResultado,int longitud)
 	}
 	return retorno;
 }
-
-/*
- * getDireccion: pide un texto al usuario, lo almacena como cadena, valida y lo devuelve
- * presultado: puntero a  array de caracter
- * longitud: tamaño del array
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
- *
- */
 static int getDireccion(char* pResultado,int longitud)
 {
 	int retorno = 0;
@@ -504,13 +489,7 @@ static int esNombre(char* pResultado,int limite)
 	return respuesta;
 }
 
-/*
- * esDni: Recibe una cadena de caracteres y devuelve 1 en caso de que el texto este compuesto solo por numeros y/o '-'
- * pResultado: cadena de caracteres
- * limite: tamaño del texto
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
- *
- */
+
 static int esDni(char* pResultado,int limite)
 {
 	int respuesta = 1; // TODO OK
@@ -519,9 +498,9 @@ static int esDni(char* pResultado,int limite)
 	int longitudDeDni = strlen(pResultado);
 	if(pResultado != NULL && limite > 0){
 		for(i=0; i <= limite && pResultado[i] != '\0';i++){
-			if((pResultado[i] < '0' || pResultado[i] > '9') || (longitudDeDni < 8))
+			if((pResultado[i] < '0' || pResultado[i] > '9') || (longitudDeDni < 8 || longitudDeDni > 11))
 			{
-				if(pResultado[i] == '-' && contadorDeGuion < 3)
+				if(pResultado[i] == '-' && contadorDeGuion < 2)
 				{
 					contadorDeGuion++;
 				}else
@@ -534,6 +513,7 @@ static int esDni(char* pResultado,int limite)
 	}
 	return respuesta;
 }
+
 
 /*
  * toNombre: Recibe una cadena de caracteres, convirtiendo la primera letra en mayuscula y las demas en minuscula
@@ -569,16 +549,18 @@ static int toNombre(char text[],int len)
  * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
  *
  */
+
 static int esAlfaNumerica(char* pResultado){
 	int retorno = 1;
 	int i;
 	if(pResultado != NULL){
 		for(i=0;pResultado[i] != '\0';i++){
 			if((pResultado[i] != ' ') &&
-			   (pResultado[i] != '.') &&
-			   (pResultado[i] < 'a' || pResultado[i] > 'z') &&
-			   (pResultado[i] < 'A' || pResultado[i] > 'Z') &&
-			   (pResultado[i] < '0' || pResultado[i] > '9')){
+				(pResultado[i] < 'a' || pResultado[i] > 'z') &&
+				(pResultado[i] < 'A' || pResultado[i] > 'Z') &&
+				(pResultado[i] < '0' || pResultado[i] > '9') &&
+				(pResultado[i] != '.'))
+			{
 				retorno = 0;
 				break;
 			}
@@ -587,12 +569,6 @@ static int esAlfaNumerica(char* pResultado){
 	return retorno;
 }
 
-/*
- * esTelefono: Recibe una cadena de caracteres y devuelve 1 en caso de que el texto este compuesto solo por numeros y/o guionrd
- * pResultado: cadena de caracteres
- * Retorno: devuelve un 1 si esta todoOK. Devuelve 0 si hubo un error.
- *
- */
 int esTelefono(char* pResultado){
 	int retorno = 1;
 	int i;

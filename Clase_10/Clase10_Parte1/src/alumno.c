@@ -137,7 +137,7 @@ int alumno_indiceExistente(Alumno* pArray,int limite,int indice){
 }
 
 /**
- * \brief modifica a un  alumno solo si el indice corresponde a un No Empty
+ * \brief modifica a un  alumno solo si el indice corresponde a un No Empty y existe el id.
  * \param Alumno* pArray: es el puntero al array de Alumno
  * \param int limite: es el limite del array
  * \return (-1) ERROR/ (0) Ok
@@ -194,28 +194,31 @@ int alumno_baja(Alumno* pArray,int limite){
  * \brief ordena a los alumnos por nombre.
  * \param Alumno* pArray: es el puntero al array de Alumno
  * \param int limite: es el limite del array
+ * \param int orden: (0) descendente / (1) ascendente
  * \return (-1) ERROR/ (0) Ok
  */
-int alumno_ordenarPorNombre(Alumno* pArray,int limite){
+int alumno_ordenarPorNombre(Alumno* pArray,int limite,int orden){
 	int retorno = -1;
 	int i;
-	int j;
-	Alumno auxAlumn;
-	if(pArray != NULL && limite > 0){
-		for(i=0;i<limite-1;i++)
+	int flagSwap;
+	Alumno bufferAlumno;
+	if(pArray != NULL && limite > 0 && (orden == 0 || orden == 1)){
+		do
 		{
-			for(j=i+1;j<limite;j++)
+			flagSwap = 0;
+			for(i=0;i<limite-1;i++)
 			{
-				if(strcmp(pArray[i].nombre,pArray[j].nombre) > 0)
+				if((orden == 1 && strncmp(pArray[i].nombre,pArray[i+1].nombre,LONG_NOMBRE) > 0)
+					||
+				   (orden == 0 && strncmp(pArray[i].nombre,pArray[i+1].nombre,LONG_NOMBRE) < 0))
 				{
-					auxAlumn = pArray[i];
-					pArray[i] = pArray[j];
-					pArray[j] = auxAlumn;
+					bufferAlumno = pArray[i];
+					pArray[i] = pArray[i+1];
+					pArray[i+1] = bufferAlumno;
+					flagSwap = 1;
 				}
 			}
-		}
-		printf("\nSe han ordenado los alumnos!\n");
-		retorno = 0;
+		}while(flagSwap);
 	}
 	return retorno;
 }

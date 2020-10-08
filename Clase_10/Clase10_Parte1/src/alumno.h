@@ -7,6 +7,7 @@
 #define MIN_LEGAJO 1
 #define TRUE 1
 #define FALSE 0
+
 typedef struct{
 	char nombre[LONG_NOMBRE];
 	int legajo;
@@ -22,7 +23,7 @@ int alumno_buscarLibre(Alumno* pArray,int limite);
 int alumno_indiceExistente(Alumno* pArray,int limite,int indice);
 int alumno_modificar(Alumno* pArray,int limite);
 int alumno_baja(Alumno* pArray,int limite);
-int alumno_ordenarPorNombre(Alumno* pArray,int limite);
+int alumno_ordenarPorNombre(Alumno* pArray,int limite,int orden);
 //FUNCIONES CREADAS 24/09
 int alumno_buscarId(Alumno* pArray,int len,int idAlumno);
 
