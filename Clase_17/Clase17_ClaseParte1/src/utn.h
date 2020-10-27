@@ -22,7 +22,6 @@ int utn_getCaracter(char* pResultado,char* mensaje,char* mensajeError,int minimo
 int utn_getCadena(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos);
 int utn_getNombre(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos);
 int utn_getDni(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos);
-int utn_getPassword(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos);
 int utn_getDireccion(char* pResultado,int longitud,char* mensaje,char* mensajeError,int reintentos);
 int esAlfaNumerica(char* pResultado);
 int esTelefono(char* pResultado);

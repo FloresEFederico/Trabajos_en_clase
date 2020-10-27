@@ -576,6 +576,7 @@ static int esAlfaNumerica(char* pResultado){
 		for(i=0;pResultado[i] != '\0';i++){
 			if((pResultado[i] != ' ') &&
 			   (pResultado[i] != '.') &&
+			   (pResultado[i] != ',') &&
 			   (pResultado[i] < 'a' || pResultado[i] > 'z') &&
 			   (pResultado[i] < 'A' || pResultado[i] > 'Z') &&
 			   (pResultado[i] < '0' || pResultado[i] > '9')){

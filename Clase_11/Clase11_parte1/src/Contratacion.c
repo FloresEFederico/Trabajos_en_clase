@@ -143,7 +143,6 @@ int contratacion_altaArray(Contratacion* pArray,int limite,Pantalla* pArrayPanta
 	}
 	return retorno;
 }
-
 /**
  * \brief: genera un valor de ID para array de Contratacions.Id
  * \return id
@@ -205,6 +204,10 @@ int contratacion_buscarCuit(Contratacion* pArray,int limite,char* cuitABuscar)
 	}
 	return indiceEncontrado;
 }
+
+
+
+
 
 /**
  * brief: Actualiza los datos de una Contratacion en una posicion del array
@@ -355,3 +358,5 @@ int contratacion_mostrarPantallasContratadas(Contratacion* pArray,int limite,Pan
 	}
 	return retorno;
 }
+
+
